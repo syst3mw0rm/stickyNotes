@@ -1,0 +1,18 @@
+{
+   "app": {
+      "launch": {
+         "local_path": "main.html"
+      }
+   },
+   "background_page": "bg.html",
+   "description": "Take notes in your chrome.",
+   "icons": {
+      "128": "icon128.png",
+      "16": "icon16.png",
+      "48": "icon48.png"
+   },
+   "name": "Sticky Notes",
+   "permissions": [ "contextMenus", "unlimitedStorage", "tabs", "http://*/*", "https://*/*" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "0.1"
+}
