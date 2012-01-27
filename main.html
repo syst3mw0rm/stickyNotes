@@ -4,36 +4,32 @@
 <title>Sticky Notes</title> 
 <style> 
 body {
-    font-family: 'Lucida Grande', 'Helvetica', sans-serif;
-    background-color : #DDD;
+    font-family: 'trebuchet ms', 'Helvetica', 'Lucida Grande',  sans-serif;
+    background-color : #FFFFFF;
+    color: #3F3F38;
 }
 
 #newNoteButton {
-   background-color: #2daebf;
+   background-color: #105acd;
    font-size: 20px;
+   color: white;
    padding: 8px 14px 9px;
    text-decoration: none;
    font-weight: bold;
    line-height: 1;
-   -moz-border-radius: 5px;
    -webkit-border-radius: 5px;
-   -moz-box-shadow: 0 1px 3px #999;
    -webkit-box-shadow: 0 1px 3px #999;
    text-shadow: 0 -1px 1px #222;
    border-bottom: 1px solid #222;
    position: relative;
    cursor: pointer;  
-   -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
    border-bottom: 1px solid rgba(0,0,0,0.25);
-   
 }
 
 .note {
-    background-color: rgb(255, 240, 70);
-    //background-image: url(sticky.png);
-    height: 250px;
+    min-height: 250px;
     padding: 10px;
     position: absolute;
     width: 200px;
@@ -44,14 +40,19 @@ body {
     display: block;
 }
  
+.note:hover .timestamp {
+    display: block;
+}
+
 .closebutton {
     display: none;
     background-image: url(deleteButton.png);
     height: 30px;
     position: absolute;
-    left: -15px;
-    top: -15px;
+    right : 5px;
+    bottom: 5px;
     width: 30px;
+    opacity : 0.5;
 }
  
 .closebutton:active {
@@ -63,15 +64,13 @@ body {
 }
  
 .timestamp {
+    display : none;
     position: absolute;
     left: 0px;
     right: 0px;
     bottom: 0px;
     font-size: 9px;
-//    background-color: #db0;
-background-color: #ffb515;
     color: white;
-    border-top: 1px solid #a80;
     padding: 2px 4px;
     text-align: left;
 }
@@ -81,7 +80,7 @@ var db = null;
  
 try {
     if (window.openDatabase) {
-        db = openDatabase("NoteTest", "1.0", "Sticky Notes in HTML5 Local storage", 200000);
+        db = openDatabase("NoteTest11", "1.0", "Sticky Notes in HTML5 Local storage", 200000);
         if (!db)
             alert("Failed to open the database on disk.  This is probably because the version was bad or there is not enough space left in this domain's quota");
     } else
@@ -246,7 +245,7 @@ Note.prototype = {
         var note = this;
         db.transaction(function (tx)
         {
-            tx.executeSql("UPDATE WebKitStickyNotes SET note = ?, timestamp = ?, left = ?, top = ?, zindex = ? WHERE id = ?", [note.text, note.timestamp, note.left, note.top, note.zIndex, note.id]);
+            tx.executeSql("UPDATE WebKitStickyNotes SET note = ?, timestamp = ?, left = ?, top = ?, zindex = ?, background = ? WHERE id = ?", [note.text, note.timestamp, note.left, note.top, note.zIndex, note.note.style.background, note.id]);
         });
     },
  
@@ -257,7 +256,8 @@ Note.prototype = {
         var note = this;
         db.transaction(function (tx) 
         {
-            tx.executeSql("INSERT INTO WebKitStickyNotes (id, note, timestamp, left, top, zindex) VALUES (?, ?, ?, ?, ?, ?)", [note.id, note.text, note.timestamp, note.left, note.top, note.zIndex]);
+             console.log(note.note.style);
+            tx.executeSql("INSERT INTO WebKitStickyNotes (id, note, timestamp, left, top, zindex, background) VALUES (?, ?, ?, ?, ?, ?, ?)", [note.id, note.text, note.timestamp, note.left, note.top, note.zIndex, note.note.style.background]);
         }); 
     },
  
@@ -318,7 +318,7 @@ function loaded()
         tx.executeSql("SELECT COUNT(*) FROM WebkitStickyNotes", [], function(result) {
             loadNotes();
         }, function(tx, error) {
-            tx.executeSql("CREATE TABLE WebKitStickyNotes (id REAL UNIQUE, note TEXT, timestamp REAL, left TEXT, top TEXT, zindex REAL)", [], function(result) { 
+            tx.executeSql("CREATE TABLE WebKitStickyNotes (id REAL UNIQUE, note TEXT, timestamp REAL, left TEXT, top TEXT, zindex REAL, background TEXT)", [], function(result) { 
                 loadNotes(); 
             });
         });
@@ -328,7 +328,7 @@ function loaded()
 function loadNotes()
 {
     db.transaction(function(tx) {
-        tx.executeSql("SELECT id, note, timestamp, left, top, zindex FROM WebKitStickyNotes", [], function(tx, result) {
+        tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background FROM WebKitStickyNotes", [], function(tx, result) {
             for (var i = 0; i < result.rows.length; ++i) {
                 var row = result.rows.item(i);
                 var note = new Note();
@@ -338,7 +338,8 @@ function loadNotes()
                 note.left = row['left'];
                 note.top = row['top'];
                 note.zIndex = row['zindex'];
- 
+                note.note.style.background = row['background'];
+                
                 if (row['id'] > highestId)
                     highestId = row['id'];
                 if (row['zindex'] > highestZ)
@@ -358,7 +359,14 @@ function modifiedString(date)
 {
     return 'Last Modified: ' + date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
 }
- 
+
+function randomColor() {
+   var Colors = ['#e85858','#90e858','#5899e8','#e058e8','#9cb8e4','#b7e49c'];
+   var len = Colors.length;
+  // alert(len);
+   return Colors[(Math.round(Math.random() * 500))%len];
+}
+
 function newNote()
 {
     var note = new Note();
@@ -366,8 +374,12 @@ function newNote()
     note.timestamp = new Date().getTime();
     note.left = Math.round(Math.random() * 400) + 'px';
     note.top = Math.round(Math.random() * 500) + 'px';
+    note.note.style.background = randomColor();
+   // alert(randomColor());
     note.zIndex = ++highestZ;
     note.saveAsNew();
+    // Focus the newly created note using cursor.
+    note.editField.focus();;
 }
  
 if (db != null)
