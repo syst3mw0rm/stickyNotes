@@ -9,7 +9,7 @@ body {
     color: #3F3F38;
 }
 
-#newNoteButton {
+#newNoteButton-1 {
    background-color: #105acd;
    font-size: 20px;
    color: white;
@@ -26,6 +26,50 @@ body {
    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
    border-bottom: 1px solid rgba(0,0,0,0.25);
+}
+
+#newNoteButton{
+
+	-webkit-transform: rotate(90deg);
+	-webkit-box-shadow: rgba(255, 255, 255, 0.199219) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.046875) 0px 1px 2px 0px;
+	background-color: #006DCC;
+	background-image: -webkit-linear-gradient(top, #08C, #04C);
+	background-repeat: repeat-x;
+	border-bottom-color: rgba(0, 0, 0, 0.246094);
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-left-color: rgba(0, 0, 0, 0.0976563);
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-right-color: rgba(0, 0, 0, 0.0976563);
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-top-color: rgba(0, 0, 0, 0.0976563);
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	border-top-style: solid;
+	border-top-width: 1px;
+	box-shadow: rgba(255, 255, 255, 0.199219) 0px 1px 0px 0px inset, rgba(0, 0, 0, 0.046875) 0px 1px 2px 0px;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 20px;
+	font-weight: normal;
+	line-height: normal;
+	padding-bottom: 14px;
+	padding-left: 24px;
+	padding-right: 24px;
+	padding-top: 14px;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: rgba(0, 0, 0, 0.246094) 0px -1px 0px;
+	width: 204px;
+	position : absolute;
+	top : 250px;
+	left : -75px;
 }
 
 .note {
@@ -329,7 +373,8 @@ function loadNotes()
 {
     db.transaction(function(tx) {
         tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background FROM WebKitStickyNotes", [], function(tx, result) {
-            for (var i = 0; i < result.rows.length; ++i) {
+		  console.log(result.rows.length);
+		  for (var i = 0; i < result.rows.length; ++i) {
                 var row = result.rows.item(i);
                 var note = new Note();
                 note.id = row['id'];
