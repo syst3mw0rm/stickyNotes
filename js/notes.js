@@ -35,11 +35,10 @@ function Note()
     // Create a Note 
     var note = document.createElement('div');
     note.className = 'note';
-    note.addEventListener('mousedown', function(e) { return self.onMouseDown(e) }, false);
+    note.addEventListener('mouseup', function(e) { return self.onMouseUpNote(e) }, false);
     note.addEventListener('click', function() { return self.onNoteClick() }, false);
     //note.addEventListener('mouseover', function() { return self.onNoteHover() }, false);
     $(note).resizable();
-    //note.resizeable();
     this.note = note;
  
     // Create Close button for note
@@ -48,7 +47,11 @@ function Note()
     close.addEventListener('click', function(event) { return self.close(event) }, false);
     note.appendChild(close);
  
- 
+    var move = document.createElement('div');
+    move.className = 'move';
+    move.addEventListener('mousedown', function(e) { return self.onMouseDown(e) }, false);
+    note.appendChild(move);
+
     var edit = document.createElement('div');
     edit.className = 'edit';
     edit.setAttribute('contenteditable', true);
@@ -58,30 +61,9 @@ function Note()
  
     var ts = document.createElement('div');
     ts.className = 'timestamp';
-    ts.addEventListener('mousedown', function(e) { return self.onMouseDown(e) }, false);
     note.appendChild(ts);
     this.lastModified = ts;
  
-    var ts = document.createElement('div');
-    ts.className = 'timestamp';
-    ts.addEventListener('mousedown', function(e) { return self.onMouseDown(e) }, false);
-    note.appendChild(ts);
-    this.lastModified = ts;
-
-    /*var resizer = document.createElement('div');
-    resizer.className = 'ui-resize-handle ui-resizeable-r';
-    note.appendChild(resizer);
-
-    var resizeb = document.createElement('div');
-    resizeb.className = 'ui-resize-handle ui-resizeable-b';
-    note.appendChild(resizeb);
-
-    var resizebe = document.createElement('div');
-    resizebe.className = 'ui-resize-handle ui-resizeable-be';
-    note.appendChild(resizebe);
-*/
-
-
     document.body.appendChild(note);
     return this;
 }
@@ -224,6 +206,10 @@ Note.prototype = {
     onMouseDown: function(e)
     {
         captured = this;
+	this.editField.blur();
+        // @TODO : Remove focus from the text area while moving around
+	e.preventDefault(); // I guess i bypassed the onNoteClick() ?
+
         this.startX = e.clientX - this.note.offsetLeft;
         this.startY = e.clientY - this.note.offsetTop;
         this.zIndex = ++highestZ;
@@ -256,24 +242,24 @@ Note.prototype = {
     {
         document.removeEventListener('mousemove', this.mouseMoveHandler, true);
         document.removeEventListener('mouseup', this.mouseUpHandler, true);
- 
+	e.preventDefault(); // I guess i bypassed the onNoteClick() ?
+
         this.save();
         return false;
     },
- 
+
+    onMouseUpNote: function(e)
+    {
+        this.save();
+        return false;
+    },
+
     onNoteClick: function(e)
     {
         this.editField.focus();
-        getSelection().collapseToEnd();
+        //getSelection().collapseToEnd(); // Why should i move to the end ?
     },
 
-    /*onNoteHover: function(e) 
-    {
-	//alert("Aamir");
-	//alert(this);
-	console.log("Mouse Over");
-    },*/
- 
     onKeyUp: function()
     {
         this.dirty = true;

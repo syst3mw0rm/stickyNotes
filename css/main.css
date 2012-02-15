@@ -95,7 +95,7 @@ body {
 }
 
 .note:hover {
-    cursor : move;
+    cursor : text;
 }
  
 .note:active {
@@ -106,8 +106,21 @@ body {
     display: block;
 }
  
-.note:hover .timestamp {
+/*.note:hover .timestamp {
     display: block;
+}*/
+
+.move {
+    width: 100%;
+    height: 5px;
+}
+
+.move:hover {
+    cursor : move;
+}
+
+.move:active {
+ cursor : move;
 }
 
 .closebutton {
