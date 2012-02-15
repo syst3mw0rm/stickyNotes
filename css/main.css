@@ -1,6 +1,6 @@
 body {
 	font-family: 'trebuchet ms', 'Helvetica', 'Lucida Grande',  sans-serif;
-	background-color : #FFFFFF;
+	/* @TODO: Check with the oncopy function of editable region. background-color : #FFFFFF; */
 	color: #3F3F38;
 }
 

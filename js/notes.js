@@ -56,6 +56,30 @@ function Note()
     edit.className = 'edit';
     edit.setAttribute('contenteditable', true);
     edit.addEventListener('keyup', function() { return self.onKeyUp() }, false);
+    $(edit).bind('copy', function(e){
+	var body_element = document.getElementsByTagName('body')[0];
+	var selection;
+	selection = window.getSelection();
+	console.log(selection);
+	var copytext = selection;
+	var newdiv = document.createElement('div');
+	newdiv.style.position='absolute';
+	newdiv.style.left='-99999px';
+	// @TODO : Remove the background color here. So, we can set the background color of the body of html
+//	newdiv.style.backgroundColor = 'transparent';//
+	//newdiv.style.removeProperty('background-color');
+	newdiv.innerHTML = copytext;
+	body_element.appendChild(newdiv);
+
+	//newdiv.innerHTML = '';//copytext;
+	//console.log(newdiv.style);
+	selection.selectAllChildren(newdiv);
+	//console.log(selection);
+	window.setTimeout(function() {
+	      body_element.removeChild(newdiv);
+	},0);
+    });
+
     note.appendChild(edit);
     this.editField = edit;
  
@@ -296,7 +320,8 @@ function loadNotes()
 		        note.zIndex = row['zindex'];
 		        note.note.style.background = row['background'];
 	   		note.note.style.width = row['width'];
-			note.note.style.height = row['height'];
+			// @TODO: Try to solve it at CSS level ?
+			note.note.style.minHeight = row['height'];
 		     
 		        if (row['id'] > highestId)
 		            highestId = row['id'];
