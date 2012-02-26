@@ -23,7 +23,6 @@ function rescueDBChanges() {
 	
 } 
 
-
 var captured = null;
 var highestZ = 0;
 var highestId = 0;
@@ -35,7 +34,6 @@ function Note()
     // Create a Note 
     var note = document.createElement('div');
     note.className = 'note';
-    note.addEventListener('mouseup', function(e) { return self.onMouseUpNote(e) }, false);
     note.addEventListener('click', function() { return self.onNoteClick() }, false);
     //note.addEventListener('mouseover', function() { return self.onNoteHover() }, false);
     $(note).resizable();
@@ -230,9 +228,11 @@ Note.prototype = {
     onMouseDown: function(e)
     {
         captured = this;
-	this.editField.blur();
-        // @TODO : Remove focus from the text area while moving around
-	e.preventDefault(); // I guess i bypassed the onNoteClick() ?
+
+	// @TODO : better way to do it.
+	this.editField.blur();   // Remove focus from the text area while moving around
+	
+	//e.preventDefault(); // I guess i bypassed the onNoteClick() ?
 
         this.startX = e.clientX - this.note.offsetLeft;
         this.startY = e.clientY - this.note.offsetTop;
@@ -250,7 +250,6 @@ Note.prototype = {
         return false;
     },
 	
-    
  
     onMouseMove: function(e)
     {
@@ -272,16 +271,12 @@ Note.prototype = {
         return false;
     },
 
-    onMouseUpNote: function(e)
-    {
-        this.save();
-        return false;
-    },
-
     onNoteClick: function(e)
     {
+	this.zIndex = ++highestZ;
+        this.save();
         this.editField.focus();
-        //getSelection().collapseToEnd(); // Why should i move to the end ?
+	getSelection().collapseToEnd(); // Why should i move to the end ?
     },
 
     onKeyUp: function()
