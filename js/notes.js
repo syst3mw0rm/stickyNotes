@@ -12,6 +12,13 @@ try {
     alert("Couldn't open the database.  Please try with a WebKit nightly with this feature enabled");
 }
 
+function stripHTML() {
+	var re = /(<([^>]+)>)/gi;
+	for (i=0; i < arguments.length; i++) {
+		arguments[i].innerHTML = arguments[i].innerHTML.replace(re, "");
+	}
+}
+
 function rescueDBChanges() {
 	console.log("rescue");
 	//return;
@@ -54,30 +61,6 @@ function Note()
     edit.className = 'edit';
     edit.setAttribute('contenteditable', true);
     edit.addEventListener('keyup', function() { return self.onKeyUp() }, false);
-    $(edit).bind('copy', function(e){
-	var body_element = document.getElementsByTagName('body')[0];
-	var selection;
-	selection = window.getSelection();
-	console.log(selection);
-	var copytext = selection;
-	var newdiv = document.createElement('div');
-	newdiv.style.position='absolute';
-	newdiv.style.left='-99999px';
-	// @TODO : Remove the background color here. So, we can set the background color of the body of html
-//	newdiv.style.backgroundColor = 'transparent';//
-	//newdiv.style.removeProperty('background-color');
-	newdiv.innerHTML = copytext;
-	body_element.appendChild(newdiv);
-
-	//newdiv.innerHTML = '';//copytext;
-	//console.log(newdiv.style);
-	selection.selectAllChildren(newdiv);
-	//console.log(selection);
-	window.setTimeout(function() {
-	      body_element.removeChild(newdiv);
-	},0);
-    });
-
     note.appendChild(edit);
     this.editField = edit;
  
@@ -274,7 +257,9 @@ Note.prototype = {
     onNoteClick: function(e)
     {
 	this.zIndex = ++highestZ;
-        this.save();
+	// @TODO : where should i write the strip function. 
+     	stripHTML(this.editField);
+	this.save();
         this.editField.focus();
 	getSelection().collapseToEnd(); // Why should i move to the end ?
     },
@@ -284,6 +269,7 @@ Note.prototype = {
         this.dirty = true;
         this.saveSoon();
     },
+
 }
  
 function loaded()
