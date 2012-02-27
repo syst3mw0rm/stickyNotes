@@ -4,6 +4,13 @@ body {
 	color: #3F3F38;
 }
 
+.top_bar {
+	margin-top: 0em;
+	background-color: black;
+	height: 9px;
+}
+
+
 .ui-icon-gripsmall-diagonal-se {
 	background-position: -64px -224px;
 }
