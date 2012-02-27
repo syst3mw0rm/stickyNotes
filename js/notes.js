@@ -1,5 +1,5 @@
 var db = null;
- 
+
 try {
     if (window.openDatabase) {
         db = openDatabase("StickyNotesTest", "1.0", "Sticky Notes in HTML5 Local storage", 200000);
@@ -19,20 +19,36 @@ function stripHTML() {
 	}
 }
 
-function rescueDBChanges() {
-	console.log("rescue");
-	//return;
-	/*db.transaction(function(tx) {        
-	    tx.executeSql("ALTER TABLE AAA ADD COLUMN width REAL)", [], function(result) { 
-		console.log("Created new Table WebStickyNotesNew");
-	    });
-	});*/
-	
-} 
-
 var captured = null;
 var highestZ = 0;
 var highestId = 0;
+
+function rescueDBChanges() {
+	var RescuedNotes = [];
+	console.log("rescuing...");
+        var db2 = openDatabase("NoteTest11", "1.0", "Sticky Notes in HTML5 Local storage", 200000);
+	if(db2 == null)
+	console.log('Error');
+
+	db2.transaction(function(tx) {
+        tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background FROM WebKitStickyNotes", [], function(tx, result) {
+	        //console.log(result.rows.length);
+		for (var i = 0; i < result.rows.length; ++i) {
+		        var row = result.rows.item(i);
+			RescuedNotes.push(row);
+			console.log(row);
+                 }
+ 		 console.log(RescuedNotes);
+            }, function(tx, error) {
+    	        alert('Failed to retrieve notes from database - ' + error.message);
+		return;
+	    });
+    	});
+}
+
+if(localStorage.getItem("RescueNoteTest1##1")) {
+	rescueDBChanges();
+}
 
 function Note()
 {
