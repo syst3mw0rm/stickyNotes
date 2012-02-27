@@ -2,6 +2,7 @@ body {
 	font-family: 'trebuchet ms', 'Helvetica', 'Lucida Grande',  sans-serif;
 	/* @TODO: Check with the oncopy function of editable region. background-color : #FFFFFF; */
 	color: #3F3F38;
+	margin: 0px;
 }
 
 .top_bar {
