@@ -163,7 +163,7 @@ Note.prototype = {
     close: function(event)
     {
         this.cancelPendingSave();
-        mixpanel.track('note deleted'); 
+        //mixpanel.track('note deleted'); 
         var note = this;
         db.transaction(function(tx)
         {
@@ -351,7 +351,7 @@ function randomColor() {
 
 function newNote()
 {
-    mixpanel.track('New Note Created');
+//    mixpanel.track('New Note Created');
     var note = new Note();
     note.id = ++highestId;
     note.timestamp = new Date().getTime();

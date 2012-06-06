@@ -19,9 +19,11 @@
             <div class="picture"></div>
             <div class="login"></div>
         </div>
-	<button id="newNoteButton" onclick="newNote()">Add Note</button> 
+        <button id="newNoteButton" onclick="newNote()">Add Note</button>
+        
 <script> 
-	document.getElementById("newNoteButton").disabled = !db;
+    document.getElementById("newNoteButton").disabled = !db;
+    mixpanel.track('Page loaded');
 </script> 
 
 <script type="text/javascript">
