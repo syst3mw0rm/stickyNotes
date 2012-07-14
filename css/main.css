@@ -162,3 +162,28 @@ body {
     padding: 2px 4px;
     text-align: left;
 }
+
+#footer
+{
+	overflow:auto;	
+}
+
+#footer div
+{
+	float:left;
+	margin-right:5px;
+}
+
+ul
+{
+	list-style-type:none;
+	padding:0;
+	overflow:auto;
+}
+
+ul li
+{
+	float:left;
+	margin-right:10px;
+}
+
