@@ -373,7 +373,6 @@ function logData(content) {
         },
         success : function(response) {
         	console.log(response);
-	        location.reload();
         },
 	error: function() {
 		console.log("Error transmitting data");
