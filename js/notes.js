@@ -104,12 +104,12 @@ Note.prototype = {
  
     get text()
     {
-        return this.editField.innerHTML;
+        return this.editField.innerText;
     },
  
     set text(x)
     {
-        this.editField.innerHTML = x;
+        this.editField.innerText = x;
     },
  
     get timestamp()
@@ -277,7 +277,7 @@ Note.prototype = {
     {
 	this.zIndex = ++highestZ;
 	// @TODO : where should i write the strip function. 
-     	this.text = this.editField.innerText;
+     	// this.text = this.editField.innerText;
 	this.save();
         this.editField.focus();
 	getSelection().collapseToEnd(); // Why should i move to the end ?
