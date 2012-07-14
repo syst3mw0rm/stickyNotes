@@ -381,10 +381,10 @@ function syncNotes()
     
     db.transaction(function(tx) {
         tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background, width, height FROM WebKitStickyNotes", [], function(tx, result) {
-	   //for (var i = 0; i < result.rows.length; ++i) {
-	   //     var row = result.rows.item(i);
-           //}
-	   logData(JSON.stringify(result));
+	   for (var i = 0; i < result.rows.length; ++i) {
+	        var note = result.rows.item(i);
+		logData(JSON.stringify(note));
+           }
         }, function(tx, error) {
             alert('Failed to retrieve notes from database - ' + error.message);
 	    return;
