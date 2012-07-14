@@ -109,7 +109,7 @@ Note.prototype = {
  
     set text(x)
     {
-        this.editField.innerText = x;
+        this.editField.innerHTML = x;
     },
  
     get timestamp()
