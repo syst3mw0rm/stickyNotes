@@ -67,7 +67,7 @@ function Note()
     move.addEventListener('mousedown', function(e) { return self.onMouseDown(e) }, false);
     note.appendChild(move);
 
-    var edit = document.createElement('div');
+    var edit = document.createElement('textarea');
     edit.className = 'edit';
     edit.setAttribute('contenteditable', true);
     edit.addEventListener('keyup', function() { return self.onKeyUp() }, false);
