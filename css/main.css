@@ -166,6 +166,9 @@ body {
 #footer
 {
 	overflow:auto;	
+	bottom: 0px;
+	right: 0px;
+	position: absolute;
 }
 
 #footer div
