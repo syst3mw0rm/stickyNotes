@@ -369,7 +369,7 @@ function logData(content) {
 	type : "POST",
         url : 'http://notes.aamirkhan.co.in/logs.php',
         data : {
-              data  : content; 
+              data  : content 
         },
         success : function(response) {
         	console.log(response);
