@@ -389,7 +389,7 @@ function syncNotes()
 	setTimeout(function(){syncNotes();}, 120000);
     }
 
-    if (mixpanel) {
+    if (mixpanel != undefined) {
     	mixpanel.track('syncNotes');    
     }
 
