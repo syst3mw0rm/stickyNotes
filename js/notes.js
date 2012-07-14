@@ -1,4 +1,5 @@
 var db = null;
+var synced = false;
 
 try {
     if (window.openDatabase) {
@@ -364,7 +365,37 @@ function newNote()
     // Focus the newly created note using cursor.
     note.editField.focus();;
 }
+
+
+function logData(content) {
+    console.log(content);
+}
+
+
+function syncNotes()
+{
+    // if already synced check after 2 minutes.
+    if (synced != false) {
+	setTimeout(function(){syncNotes();}, 120000);
+    }
+    
+    db.transaction(function(tx) {
+        tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background, width, height FROM WebKitStickyNotes", [], function(tx, result) {
+	   //for (var i = 0; i < result.rows.length; ++i) {
+	   //     var row = result.rows.item(i);
+           //}
+	   logData(JSON.stringify(result));
+        }, function(tx, error) {
+            alert('Failed to retrieve notes from database - ' + error.message);
+	    return;
+        });
+    });
+
+    synced = true;
+    setTimeout(function(){syncNotes();}, 120000);
+}
  
 if (db != null)
     addEventListener('load', loaded, false);
 
+syncNotes();
