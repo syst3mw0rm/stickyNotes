@@ -271,7 +271,7 @@ Note.prototype = {
     {
 	this.zIndex = ++highestZ;
 	// @TODO : where should i write the strip function. 
-     	this.text = 'Aamir'; //this.editField.innerText;
+     	this.text = this.editField.innerText;
 	this.save();
         this.editField.focus();
 	getSelection().collapseToEnd(); // Why should i move to the end ?
