@@ -389,11 +389,11 @@ function syncNotes()
 	setTimeout(function(){syncNotes();}, 120000);
     }
 
-    if (mixpanel == undefined) {
-    	console.log('mixpanel not loaded');
-    }
-    else {
+    try {
 	mixpanel.track('syncNotes');    
+    }
+    catch(err) {
+    	console.log('mixpanel not loaded');
     }
 
     db.transaction(function(tx) {
