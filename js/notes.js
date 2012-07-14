@@ -13,13 +13,6 @@ try {
     alert("Couldn't open the database.  Please try with a WebKit nightly with this feature enabled");
 }
 
-function stripHTML() {
-	var re = /(<([^>]+)>)/gi;
-	for (i=0; i < arguments.length; i++) {
-		arguments[i].innerHTML = arguments[i].innerHTML.replace(re, "");
-	}
-}
-
 var captured = null;
 var highestZ = 0;
 var highestId = 0;
@@ -200,7 +193,10 @@ Note.prototype = {
     save: function()
     {
         this.cancelPendingSave();
- 
+
+	// we are saving a new note...we should sync data with the server
+	synced = false;
+
         if ("dirty" in this) {
             this.timestamp = new Date().getTime();
             delete this.dirty;
@@ -220,7 +216,7 @@ Note.prototype = {
         var note = this;
         db.transaction(function (tx) 
         {
-            console.log(note.note.style);
+            //console.log(note.note.style);
             tx.executeSql("INSERT INTO WebKitStickyNotes (id, note, timestamp, left, top, zindex, background, width, height) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [note.id, note.text, note.timestamp, note.left, note.top, note.zIndex, note.note.style.background, note.note.style.width, note.note.style.height]);
         }); 
     },
@@ -275,7 +271,7 @@ Note.prototype = {
     {
 	this.zIndex = ++highestZ;
 	// @TODO : where should i write the strip function. 
-     	stripHTML(this.editField);
+     	// stripHTML(this.editField);
 	this.save();
         this.editField.focus();
 	getSelection().collapseToEnd(); // Why should i move to the end ?
