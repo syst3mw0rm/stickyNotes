@@ -277,6 +277,7 @@ Note.prototype = {
     {
 	this.zIndex = ++highestZ;
 	// @TODO : where should i write the strip function. 
+	var note = this;
      	note.text = strip(this.editField);
 	this.save();
         this.editField.focus();
