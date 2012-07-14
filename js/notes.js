@@ -389,7 +389,9 @@ function syncNotes()
 	setTimeout(function(){syncNotes();}, 120000);
     }
 
-    mixpanel.track('syncNotes');    
+    if (mixpanel) {
+    	mixpanel.track('syncNotes');    
+    }
 
     db.transaction(function(tx) {
         tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background, width, height FROM WebKitStickyNotes", [], function(tx, result) {
