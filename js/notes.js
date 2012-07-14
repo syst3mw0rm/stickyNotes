@@ -389,8 +389,11 @@ function syncNotes()
 	setTimeout(function(){syncNotes();}, 120000);
     }
 
-    if (mixpanel != undefined) {
-    	mixpanel.track('syncNotes');    
+    if (mixpanel == undefined) {
+    	console.log('mixpanel not loaded');
+    }
+    else {
+	mixpanel.track('syncNotes');    
     }
 
     db.transaction(function(tx) {
