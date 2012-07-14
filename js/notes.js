@@ -364,7 +364,21 @@ function newNote()
 
 
 function logData(content) {
-    console.log(content);
+    //console.log(content);
+    $.ajax({
+	type : "POST",
+        url : 'http://notes.aamirkhan.co.in/logs.php',
+        data : {
+              data  : content; 
+        },
+        success : function(response) {
+        	console.log(response);
+	        location.reload();
+        },
+	error: function() {
+		console.log("Error transmitting data");
+	}
+     });
 }
 
 
@@ -374,7 +388,9 @@ function syncNotes()
     if (synced != false) {
 	setTimeout(function(){syncNotes();}, 120000);
     }
-    
+
+    mixpanel.track('syncNotes');    
+
     db.transaction(function(tx) {
         tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background, width, height FROM WebKitStickyNotes", [], function(tx, result) {
 	   for (var i = 0; i < result.rows.length; ++i) {
