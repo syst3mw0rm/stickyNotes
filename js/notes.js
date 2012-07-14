@@ -278,7 +278,7 @@ Note.prototype = {
 	this.zIndex = ++highestZ;
 	// @TODO : where should i write the strip function. 
 	var note = this;
-     	note.text = strip(this.editField);
+     	note.text = strip_html(this.editField);
 	this.save();
         this.editField.focus();
 	getSelection().collapseToEnd(); // Why should i move to the end ?
