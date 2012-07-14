@@ -17,6 +17,12 @@ var captured = null;
 var highestZ = 0;
 var highestId = 0;
 
+function strip_html(html) {
+   var tmp = document.createElement("DIV");
+   tmp.innerHTML = html;
+   return tmp.textContent||tmp.innerText;
+}
+
 function rescueDBChanges() {
 	var RescuedNotes = [];
 	console.log("rescuing...");
@@ -271,7 +277,7 @@ Note.prototype = {
     {
 	this.zIndex = ++highestZ;
 	// @TODO : where should i write the strip function. 
-     	// stripHTML(this.editField);
+     	note.text = strip(this.editField);
 	this.save();
         this.editField.focus();
 	getSelection().collapseToEnd(); // Why should i move to the end ?
