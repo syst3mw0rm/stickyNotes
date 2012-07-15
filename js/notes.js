@@ -386,6 +386,7 @@ function syncNotes()
     // if already synced check after 2 minutes.
     if (synced != false) {
 	setTimeout(function(){syncNotes();}, 120000);
+	return;
     }
 
     try {
