@@ -156,8 +156,13 @@ Note.prototype = {
  
     close: function(event)
     {
+  	try {
+		mixpanel.track('Delete Note');    
+    	}
+    	catch(err) {
+    		console.log('mixpanel not loaded');
+    	}
         this.cancelPendingSave();
-        //mixpanel.track('note deleted'); 
         var note = this;
         db.transaction(function(tx)
         {
@@ -269,6 +274,15 @@ Note.prototype = {
 
     onNoteClick: function(e)
     {
+
+	try {
+                mixpanel.track('Note Click');
+        }
+        catch(err) {
+                console.log('mixpanel not loaded');
+        }
+	
+        //mixpanel.track('note deleted'); 
 	this.zIndex = ++highestZ;
 	// @TODO : where should i write the strip function. 
      	this.text = this.text;
@@ -300,6 +314,14 @@ function loaded()
  
 function loadNotes()
 {
+    try {
+	mixpanel.track('loadNotes');    
+    }
+    catch(err) {
+    	console.log('mixpanel not loaded');
+    }
+
+
     db.transaction(function(tx) {
         tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background, width, height FROM WebKitStickyNotes", [], function(tx, result) {
 	        //console.log(result.rows.length);
@@ -348,7 +370,13 @@ function randomColor() {
 
 function newNote()
 {
-//    mixpanel.track('New Note Created');
+    try {
+         mixpanel.track('new Note');
+    }
+    catch(err) {
+         console.log('mixpanel not loaded');
+    }
+
     var note = new Note();
     note.id = ++highestId;
     note.timestamp = new Date().getTime();
