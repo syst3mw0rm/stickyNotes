@@ -1,5 +1,3 @@
-(function() { 
-
 var db = null;
 var synced = false;
 
@@ -401,19 +399,6 @@ function newNote()
 
 function logData(content) {
     //console.log(content);
-    $.ajax({
-	type : "POST",
-        url : 'http://notes.aamirkhan.co.in/logs.php',
-        data : {
-              data  : content 
-        },
-        success : function(response) {
-        	console.log(response);
-        },
-	error: function() {
-		console.log("Error transmitting data");
-	}
-     });
 }
 
 
@@ -452,4 +437,3 @@ if (db != null)
     addEventListener('load', loaded, false);
 
 syncNotes();
-} ());
