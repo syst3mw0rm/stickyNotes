@@ -1,9 +1,17 @@
+(function() { 
+
 var db = null;
 var synced = false;
 
+// DATABASE CONFIGURATION
+var DB_NAME = "StickyNotesTest";
+var DB_VERSION = "1.0";
+var DB_DESCRIPTION = "Sticky Notes in HTML5 Local storage";
+var DB_SIZE = 200000;
+
 try {
     if (window.openDatabase) {
-        db = openDatabase("StickyNotesTest", "1.0", "Sticky Notes in HTML5 Local storage", 200000);
+        db = openDatabase(DB_NAME, DB_VERSION, DB_DESCRIPTION, DB_SIZE);
         if (!db)
             alert("Failed to open the database on disk.  This is probably because the version was bad or there is not enough space left in this domain's quota");
     } else
@@ -444,3 +452,4 @@ if (db != null)
     addEventListener('load', loaded, false);
 
 syncNotes();
+} ());
