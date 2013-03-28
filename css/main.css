@@ -5,6 +5,11 @@ body {
 	margin: 0px;
 }
 
+a {
+	text-decoration : none;
+	color : inherit;
+}
+
 .top_bar {
 	margin-top: 0em;
 	background-color: black;
@@ -96,11 +101,14 @@ body {
 
 .note {
     min-height: 250px;
-    padding: 10px;
     padding-top : 0px;
     position: absolute;
     width: 200px;
     -webkit-box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.edit {
+	padding : 10px;
 }
 
 .note:hover {
@@ -120,16 +128,18 @@ body {
 }*/
 
 .move {
+    height : 5px;
     width: 100%;
-    height: 5px;
 }
 
 .move:hover {
+    height : 10px;
+    background-color : #BFBFBF;
     cursor : move;
 }
 
 .move:active {
- cursor : move;
+    cursor : move;
 }
 
 .closebutton {
@@ -190,3 +200,26 @@ ul li
 	margin-right:10px;
 }
 
+
+#Support {
+	position: absolute;
+	right: 15px;
+	top: 29px;
+}
+
+.transparent-button {
+	background: rgba(255, 255, 255, 0.02);
+	background: -moz-linear-gradient(top,rgba(255, 255, 255, 0.02),rgba(0, 0, 0, 0.05));
+	background: -webkit-linear-gradient(top,rgba(255, 255, 255, 0.02),rgba(0, 0, 0, 0.05));
+	background: linear-gradient(top,rgba(255, 255, 255, 0.02),rgba(0, 0, 0, 0.05));
+	display: block;
+	border-radius: 4px;
+	text-decoration: none;
+	min-width: 100px;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: center;
+	padding: 10px 18px;
+	background-color: transparent;
+	border: solid 1px rgba(0, 0, 0, 0.22);
+}

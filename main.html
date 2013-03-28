@@ -2,30 +2,26 @@
 <html>
 <!-- manifest="http://syst3mw0rm.github.com/stickyNotes/StickyNotes.manifest"> -->
 <head> 
-	<title>Sticky Notes</title>
-	<link rel="stylesheet" type="text/css" href="css/main.css" />
-	<link rel="shortcut icon" href="favicon.png">
-        <script type="text/javascript" src="js/notes.js"> </script>
+<title>Sticky Notes</title>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="shortcut icon" href="favicon.png">
+<script type="text/javascript" src="js/jquery/js/jquery.min.js"> </script>
+<script type="text/javascript" src="js/notes.js"> </script>
 </head>
 <body>
-	<div class="top_bar"></div>
-	<div id="loginInfo">
-            <div class="picture"></div>
-            <div class="login"></div>
-        </div>
-        <button id="newNoteButton" onclick="newNote()">Add Note</button>
+
+<div class="top_bar"></div>
+
+<button id="newNoteButton">Add Note</button>
+<div id="Support" class="transparent-button"><a href="mailto:syst3m.w0rm@gmail.com"> Contact Me!</a></div>
         
-<script type="text/javascript" src="js/jquery/js/jquery.min.js"> </script>
+
 <script type="text/javascript" src="js/jquery/ui/jquery.ui.core.js"> </script>
 <script type="text/javascript" src="js/jquery/ui/jquery.ui.widget.js"> </script>
 <script type="text/javascript" src="js/jquery/ui/jquery.ui.mouse.js"> </script>
 <script type="text/javascript" src="js/jquery/ui/jquery.ui.resizable.js"> </script>
 <script type="text/javascript" src="js/mixpanel.js"> </script>
-
-<script> 
-    document.getElementById("newNoteButton").disabled = !db;
-    mixpanel.track('Page loaded');
-</script> 
+<script type="text/javascript" src="js/main.js"> </script>
 
 </body> 
 </html> 

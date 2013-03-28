@@ -4,15 +4,24 @@
          "local_path": "main.html"
       }
    },
-   "background_page": "bg.html",
+   "background": {
+      "page": "bg.html"
+   },
+
    "description": "Sticky Notes for your chrome",
+   
    "icons": {
       "128": "images/icon128.png",
       "16": "images/icon16.png",
       "48": "images/icon48.png"
    },
+
+"content_security_policy": "script-src 'self' https://api.mixpanel.com; object-src 'self'",
+
    "name": "Sticky Notes",
+   "homepage_url": "http://github.com/syst3mw0rm/stickyNotes",
    "permissions": [ "unlimitedStorage" ],
    "update_url": "http://clients2.google.com/service/update2/crx",
-   "version": "1.1.2"
+   "manifest_version" : 2,
+   "version": "1.6.5"
 }

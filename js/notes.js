@@ -1,23 +1,32 @@
 var db = null;
 var synced = false;
 
+var releaseId = "PROD1X01";
+
 // DATABASE CONFIGURATION
 var DB_NAME = "StickyNotesTest";
 var DB_VERSION = "1.0";
 var DB_DESCRIPTION = "Sticky Notes in HTML5 Local storage";
 var DB_SIZE = 200000;
 
-try {
-    if (window.openDatabase) {
-        db = openDatabase(DB_NAME, DB_VERSION, DB_DESCRIPTION, DB_SIZE);
-        if (!db)
-            alert("Failed to open the database on disk.  This is probably because the version was bad or there is not enough space left in this domain's quota");
-    } else
-        alert("Couldn't open the database.  Please try with a WebKit nightly with this feature enabled");
-} catch(err) {
-    db = null;
-    alert("Couldn't open the database.  Please try with a WebKit nightly with this feature enabled");
+function getConnection() {
+	try {
+	    if (window.openDatabase) {
+	        db = openDatabase(DB_NAME, DB_VERSION, DB_DESCRIPTION, DB_SIZE);
+	        if (!db)
+	            alert("Failed to open the database on disk. This is probably because the version was bad or there is not enough space left in this domain's quota");
+	    } else {
+	        alert("Couldn't open the database. It seems your browser doesn't have this feature enabled");
+	    }
+	} catch(err) {
+	    db = null;
+	    alert("Couldn't open the database.  Please try with a WebKit nightly with this feature enabled");
+	}
 }
+
+// Establish Connection to database.
+//window.addEventListener('load', getConnection);
+getConnection();
 
 var captured = null;
 var highestZ = 0;
@@ -40,18 +49,33 @@ function rescueDBChanges() {
                  }
  		 console.log(RescuedNotes);
             }, function(tx, error) {
-    	        alert('Failed to retrieve notes from database - ' + error.message);
+    	        alert('Failed to retrieve not9es from database - ' + error.message);
 		return;
 	    });
     	});
 }
 
-if(localStorage.getItem("RescueNoteTest1##1")) {
-	rescueDBChanges();
+//if(localStorage.getItem("RescueNoteTest1##1")) {
+//	rescueDBChanges();
+//}
+
+function newRelease() {
+    db.transaction(function(tx) {
+       	tx.executeSql("ALTER TABLE WebKitStickyNotes ADD COLUMN deleted BOOL", [], function(result) {
+		// Added required column to table.
+        }, function(tx, error) {
+		console.log('Error while adding column to db');		
+       	});
+   });
 }
 
-function Note()
-{
+if(!localStorage.getItem(releaseId)) {
+	newRelease();
+	localStorage.setItem(releaseId, true);
+}
+
+
+function Note() {
     var self = this;
 
     // Create a Note 
@@ -65,7 +89,7 @@ function Note()
     // Create Close button for note
     var close = document.createElement('div');
     close.className = 'closebutton';
-    close.addEventListener('click', function(event) { return self.close(event) }, false);
+    close.addEventListener('click', function(e) { return self.close(e) }, false);
     note.appendChild(close);
  
     var move = document.createElement('div');
@@ -168,11 +192,11 @@ Note.prototype = {
     	catch(err) {
     		console.log('mixpanel not loaded');
     	}
+
         this.cancelPendingSave();
         var note = this;
-        db.transaction(function(tx)
-        {
-            tx.executeSql("DELETE FROM WebKitStickyNotes WHERE id = ?", [note.id]);
+        db.transaction(function(tx) {
+            tx.executeSql("UPDATE WebKitStickyNotes SET deleted = 1 WHERE id = ?", [note.id]);
         });
         
         var duration = event.shiftKey ? 2 : .25;
@@ -235,6 +259,7 @@ Note.prototype = {
     onMouseDown: function(e)
     {
         captured = this;
+	this._cur_pos = getSelection().focusOffset;
 
 	// @TODO : better way to do it.
 	this.editField.blur();   // Remove focus from the text area while moving around
@@ -280,21 +305,16 @@ Note.prototype = {
 
     onNoteClick: function(e)
     {
-
-	try {
-                mixpanel.track('Note Click');
-        }
-        catch(err) {
-                console.log('mixpanel not loaded');
-        }
-	
-        //mixpanel.track('note deleted'); 
 	this.zIndex = ++highestZ;
 	// @TODO : where should i write the strip function. 
-     	this.text = this.text;
 	this.save();
-        this.editField.focus();
-	getSelection().collapseToEnd(); // Why should i move to the end ?
+	this.editField.focus();
+	if(this._cur_pos) {
+//		alert("Setting to " + this._cur_pos);
+		selection = window.getSelection();
+		selection.collapse(selection.anchorNode, this._cur_pos);
+		this._cur_pos = undefined;
+	}
     },
 
     onKeyUp: function()
@@ -305,8 +325,7 @@ Note.prototype = {
 
 }
  
-function loaded()
-{
+function loaded() {
     db.transaction(function(tx) {
         tx.executeSql("SELECT COUNT(*) FROM WebkitStickyNotes", [], function(result) {
             loadNotes();
@@ -318,8 +337,7 @@ function loaded()
     });
 }
  
-function loadNotes()
-{
+function loadNotes() {
     try {
 	mixpanel.track('loadNotes');    
     }
@@ -329,10 +347,20 @@ function loadNotes()
 
 
     db.transaction(function(tx) {
-        tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background, width, height FROM WebKitStickyNotes", [], function(tx, result) {
+        tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background, width, height, deleted FROM WebKitStickyNotes", [], function(tx, result) {
 	        //console.log(result.rows.length);
 		for (var i = 0; i < result.rows.length; ++i) {
 		        var row = result.rows.item(i);
+
+			// don't display deleted/completed notes.
+			try {
+				if(row['deleted'] == '1')
+				continue;
+			}
+			catch (err){
+				console.log(err);
+			}
+
 		        var note = new Note();
 		        note.id = row['id'];
 		        note.text = row['note'];
@@ -356,7 +384,6 @@ function loadNotes()
 
         }, function(tx, error) {
             alert('Failed to retrieve notes from database - ' + error.message);
-            rescueDBChanges();
 	    return;
        });
     });
@@ -374,8 +401,7 @@ function randomColor() {
    return Colors[(Math.round(Math.random() * 500))%len];
 }
 
-function newNote()
-{
+function newNote() {
     try {
          mixpanel.track('new Note');
     }
@@ -401,39 +427,12 @@ function logData(content) {
     //console.log(content);
 }
 
-
-function syncNotes()
-{
-    // if already synced check after 2 minutes.
-    if (synced != false) {
-	setTimeout(function(){syncNotes();}, 120000);
-	return;
-    }
-
-    try {
-	mixpanel.track('syncNotes');    
-    }
-    catch(err) {
-    	console.log('mixpanel not loaded');
-    }
-
-    db.transaction(function(tx) {
-        tx.executeSql("SELECT id, note, timestamp, left, top, zindex, background, width, height FROM WebKitStickyNotes", [], function(tx, result) {
-	   for (var i = 0; i < result.rows.length; ++i) {
-	        var note = result.rows.item(i);
-		logData(JSON.stringify(note));
-           }
-        }, function(tx, error) {
-            alert('Failed to retrieve notes from database - ' + error.message);
-	    return;
-        });
-    });
-
-    synced = true;
-    setTimeout(function(){syncNotes();}, 120000);
-}
- 
-if (db != null)
+if (db != null) {
     addEventListener('load', loaded, false);
+}
 
-syncNotes();
+$(document).ready(function () {
+    $('#newNoteButton').click(function () {
+        newNote();
+    });
+});
